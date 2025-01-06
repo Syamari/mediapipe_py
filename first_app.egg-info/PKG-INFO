@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: first_app
+Version: 0.1.0
+Summary: an env for first app
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: mediapipe>=0.10.20
+Requires-Dist: numpy>=1.26.4
+Requires-Dist: opencv-python>=4.10.0.84
