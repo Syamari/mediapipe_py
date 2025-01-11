@@ -16,6 +16,22 @@ hands = mp_hands.Hands(
 # ウェブカメラの準備
 cap = cv2.VideoCapture(0)
 
+import os
+
+
+def capture_frame(background):
+    # imageディレクトリがない場合は作成
+    if not os.path.exists("image"):
+        os.makedirs("image")
+
+    # ファイル名を作成（例: "image/capture_XXX.png"）
+    count = len(os.listdir("image"))
+    filename = f"image/capture_{count}.png"
+
+    # OpenCVで背景画像を保存
+    cv2.imwrite(filename, background)
+    print(f"Saved image: {filename}")
+
 
 def draw_face(results, background):
     if results.multi_face_landmarks:
@@ -92,9 +108,15 @@ def main():
 
             # 画像を表示
             cv2.imshow("MediaPipe FaceMesh on Black Background", background)
+
+            # キー入力受付の設定
+            key = cv2.waitKey(10) & 0xFF
             # "q"を押すと終了
-            if cv2.waitKey(10) & 0xFF == ord("q"):
+            if key == ord("q"):
                 break
+            # "s"を押すと画像を保存
+            if key == ord("s"):
+                capture_frame(background)
 
 
 main()
