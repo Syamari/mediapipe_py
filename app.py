@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from utils import CvFpsCalc
+import os
 
 
 # MediaPipeのセットアップ
@@ -15,18 +16,24 @@ hands = mp_hands.Hands(
 
 # ウェブカメラの準備
 cap = cv2.VideoCapture(0)
+# カメラの解像度を設定
+use_camera_background = False
 
-import os
+
+# カメラ背景のオンオフの関数；上記のグローばる変数で演算子を反転させる関数
+def toggle_background():
+    global use_camera_background
+    use_camera_background = not use_camera_background
 
 
 def capture_frame(background):
-    # imageディレクトリがない場合は作成
+    # imageディレクトリがない場合でも作成しとける用に↓
     if not os.path.exists("image"):
         os.makedirs("image")
 
-    # ファイル名を作成（例: "image/capture_XXX.png"）
-    count = len(os.listdir("image"))
-    filename = f"image/capture_{count}.png"
+    # ファイル名を番号順に作成、（例: "image/capture_番号.png"）
+    count_image = len(os.listdir("image"))
+    filename = f"image/capture_{count_image}.png"
 
     # OpenCVで背景画像を保存
     cv2.imwrite(filename, background)
@@ -84,8 +91,12 @@ def main():
 
             # 背景の画像を作成
             height, width, _ = image.shape
-            # background = np.zeros((height, width, 3), np.uint8)
-            background = np.ones((height, width, 3), np.uint8) * 255
+            # 背景を画像かカメラで切り替えて設定
+            if use_camera_background:
+                background = image.copy()
+            else:
+                # background = np.ones((height, width, 3), np.uint8) * 255
+                background = np.zeros((height, width, 3), np.uint8)
 
             # 結果を背景の画像上にface描画
             # faceを描画
@@ -117,6 +128,9 @@ def main():
             # "s"を押すと画像を保存
             if key == ord("s"):
                 capture_frame(background)
+            # "b"を押すと背景を切り替え
+            if key == ord("b"):
+                toggle_background()
 
 
 main()
