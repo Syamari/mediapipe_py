@@ -80,7 +80,6 @@ def main():
                 continue
 
             # 前回のフレームの時間を記録する変数
-            prev_frame_time = 0
 
             # BGR画像をRGBに変換
             rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
